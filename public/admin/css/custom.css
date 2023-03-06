@@ -88,3 +88,7 @@ form > .card-header .card-toolbar {
 .symbol div a {
     position: absolute; top: 0; right: 0; width: 18px; height: 18px;
 }
+
+span.help-block {
+    color : red !important
+}

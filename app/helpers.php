@@ -25,13 +25,16 @@ function getPermissions($user_type = 'normal')
             6 =>[ //City
                 'permissions' => 'access,add,edit,delete'
             ],
-            7 =>[ //CMS Pages
-                'permissions' => 'access,edit'
-            ],
-            8 =>[ //FAQs
+            7 =>[ //Coupan Pages
                 'permissions' => 'access,add,edit,delete'
             ],
-            9 =>[ //Site Configurations
+            8 =>[ //CMS Pages
+                'permissions' => 'access,edit'
+            ],
+            9 =>[ //FAQs
+                'permissions' => 'access,add,edit,delete'
+            ],
+            10 =>[ //Site Configurations
                 'permissions' => 'access'
             ],
         ];
@@ -89,18 +92,16 @@ function number_format_short($n, $precision = 1)
 }
 
 function getUniqueString($table, $length = NULL){
-    // $length = $length ?? config('utility.custom_length', 8);
-    // $field = 'custom_id';
+    $length = $length ?? config('utility.custom_length', 8);
+    $field = 'custom_id';
 
-    // $string = \Illuminate\Support\Str::random($length);
-    // $found = \Illuminate\Support\Facades\DB::table($table)->where([$field => $string])->first();
-    // if ($found) {
-    //     return getUniqueString($table, $field, $length);
-    // } else {
-    //     return $string;
-    // }
-
-    return Str::uuid()->toString();
+    $string = \Illuminate\Support\Str::random($length);
+    $found = \Illuminate\Support\Facades\DB::table($table)->where([$field => $string])->first();
+    if ($found) {
+        return getUniqueString($table, $field, $length);
+    } else {
+        return $string;
+    }
 }
 
 function generateURL($file = "")

@@ -45,12 +45,12 @@ class UsersController extends Controller
         $request['custom_id']   =   getUniqueString('users');
         $request['password']    =   Hash::make(str_random(config('utility.default_password')));
         $path = NULL;
-        if( $request->has('profile_photo') ) {
+        if ($request->has('profile_photo')) {
             $path = $request->file('profile_photo')->store('users/profile_photo');
         }
         $user = User::create($request->all());
         $user->profile_photo = $path;
-        if( $user->save() ) {
+        if ($user->save()) {
             flash('User account created successfully!')->success();
         } else {
             flash('Unable to save avatar. Please try again later.')->error();
@@ -89,15 +89,15 @@ class UsersController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        try{
+        try {
             DB::beginTransaction();
-            if(!empty($request->action) && $request->action == 'change_status') {
-                $content = ['status'=>204, 'message'=>"something went wrong"];
-                if($user) {
+            if (!empty($request->action) && $request->action == 'change_status') {
+                $content = ['status' => 204, 'message' => "something went wrong"];
+                if ($user) {
                     $user->is_active = $request->value;
-                    if($user->save()) {
+                    if ($user->save()) {
                         DB::commit();
-                        $content['status']=200;
+                        $content['status'] = 200;
                         $content['message'] = "Status updated successfully.";
                     }
                 }
@@ -105,22 +105,22 @@ class UsersController extends Controller
             } else {
                 $path = $user->profile_photo;
                 //request has remove_profie_photo then delete user image
-                if( $request->has('remove_profie_photo') ){
-                    if( $user->profile_photo){
+                if ($request->has('remove_profie_photo')) {
+                    if ($user->profile_photo) {
                         Storage::delete($user->profile_photo);
                     }
                     $path = null;
                 }
 
-                if( $request->hasFile('profile_photo') ) {
-                    if( $user->profile_photo){
+                if ($request->hasFile('profile_photo')) {
+                    if ($user->profile_photo) {
                         Storage::delete($user->profile_photo);
                     }
                     $path = $request->profile_photo->store('users/profile_photo');
                 }
                 $user->fill($request->all());
                 $user->profile_photo = $path;
-                if( $user->save() ) {
+                if ($user->save()) {
                     DB::commit();
                     flash('User details updated successfully!')->success();
                 } else {
@@ -128,11 +128,11 @@ class UsersController extends Controller
                 }
                 return redirect(route('admin.users.index'));
             }
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollback();
-            return redirect()->back()->flash('error',$e->getMessage());
-        }catch(Exception $e){
-            return redirect()->back()->with('error',$e->getMessage());
+            return redirect()->back()->flash('error', $e->getMessage());
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -144,33 +144,33 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if(!empty($request->action) && $request->action == 'delete_all'){
-        $content = ['status'=>204, 'message'=>"something went wrong"];
+        if (!empty($request->action) && $request->action == 'delete_all') {
+            $content = ['status' => 204, 'message' => "something went wrong"];
 
-        $users_profile_photos = User::whereIn('custom_id', explode(',', $request->ids))->pluck('profile_photo')->toArray();
-        foreach ($users_profile_photos as $image) {
-            if(!empty($image)){
-              Storage::delete($image);
+            $users_profile_photos = User::whereIn('custom_id', explode(',', $request->ids))->pluck('profile_photo')->toArray();
+            foreach ($users_profile_photos as $image) {
+                if (!empty($image)) {
+                    Storage::delete($image);
+                }
             }
-        }
-        User::whereIn('custom_id',explode(',',$request->ids))->delete();
-        $content['status']=200;
-        $content['message'] = "User deleted successfully.";
-        $content['count'] = User::all()->count();
-        return response()->json($content);
-        }else{
-        $user = User::where('custom_id', $id)->firstOrFail();
-        if( $user->profile_photo ){
-        Storage::delete($user->profile_photo);
-        }
-        $user->delete();
-        if(request()->ajax()){
-        $content = array('status'=>200, 'message'=>"User deleted successfully.", 'count' => User::all()->count());
-        return response()->json($content);
-        }else{
-        flash('User deleted successfully.')->success();
-        return redirect()->route('admin.users.index');
-        }
+            User::whereIn('custom_id', explode(',', $request->ids))->delete();
+            $content['status'] = 200;
+            $content['message'] = "User deleted successfully.";
+            $content['count'] = User::all()->count();
+            return response()->json($content);
+        } else {
+            $user = User::where('custom_id', $id)->firstOrFail();
+            if ($user->profile_photo) {
+                Storage::delete($user->profile_photo);
+            }
+            $user->delete();
+            if (request()->ajax()) {
+                $content = array('status' => 200, 'message' => "User deleted successfully.", 'count' => User::all()->count());
+                return response()->json($content);
+            } else {
+                flash('User deleted successfully.')->success();
+                return redirect()->route('admin.users.index');
+            }
         }
     }
 

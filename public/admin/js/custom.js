@@ -104,7 +104,7 @@ $(function () {
             },
             success: function (success) {
                 toastr.success("Status Changed!");
-                // oTable.DataTable().ajax.reload();
+                oTable.DataTable().ajax.reload();
             },
         });
     });
@@ -191,7 +191,7 @@ $(function () {
                             }
                             $(".all_select").prop("indeterminate", false);
                             $(".delete_all_link").removeAttr("disabled");
-                            oTable.ajax.reload();
+                            oTable.DataTable().ajax.reload();
                         },
                     });
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CmsPagesController;
 use App\Http\Controllers\Admin\FaqsController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\CoupanController;
 use App\Http\Controllers\Admin\ErrorController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\StateController;
@@ -72,6 +73,10 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['check_permit', 'revalida
     /* FAQs Management*/
     Route::get('faqs/listing',  [FaqsController::class, 'listing'])->name('faqs.listing');
     Route::resource('faqs', FaqsController::class);
+
+    /* Coupan Code */
+    Route::get('coupans/listing',  [CoupanController::class, 'listing'])->name('coupans.listing');
+    Route::resource('coupans', CoupanController::class);
 });
 
 //User Exception
@@ -86,6 +91,7 @@ Route::controller(ChartController::class)->group(function () {
 Route::controller(UtilityController::class)->group(function () {
     Route::post('check-email',  'checkEmail')->name('check.email');
     Route::post('check-contact',  'checkContact')->name('check.contact');
+    Route::post('check-coupan',  'checkCoupanCode')->name('check.coupan');
 
     Route::post('check-title',  'checkTitle')->name('check.title');
     Route::post('profile/check-password',  'profilecheckpassword')->name('profile.check-password');

@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Admin;
 use App\Models\CmsPage;
+use App\Models\Coupan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,42 +46,59 @@ class UtilityController extends Controller
     public function checkEmail(Request $request)
     {
         $id = $request->id ?? 0;
-    	if( $request->type == 'user' ) {
-    		$user = User::query();
-    	} elseif($request->type == 'admin') {
-    		$user = Admin::query();
-    	}
+        if ($request->type == 'user') {
+            $user = User::query();
+        } elseif ($request->type == 'admin') {
+            $user = Admin::query();
+        }
 
-    	$user =	$user->where([
-    			['id', '<>', $id],
-    			'email' => $request->email,
-    		])->count();
+        $user =    $user->where([
+            ['id', '<>', $id],
+            'email' => $request->email,
+        ])->count();
 
-    	if( $user == 0 ){
-    	    return "true";
-    	}else{
-    	    return "false";
-    	}
+        if ($user == 0) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
     public function checkContact(Request $request)
     {
         $id = $request->id ?? 0;
-    	if( $request->type == 'user' ) {
-    		$user = User::query();
-    	} elseif($request->type == 'admin') {
-    		$user = Admin::query();
-    	}
+        if ($request->type == 'user') {
+            $user = User::query();
+        } elseif ($request->type == 'admin') {
+            $user = Admin::query();
+        }
 
-    	$user =	$user->where([
-    			['id', '<>', $id],
-    			'contact_no' => $request->contact_no,
-    		])->count();
+        $user =    $user->where([
+            ['id', '<>', $id],
+            'contact_no' => $request->contact_no,
+        ])->count();
 
-    	if( $user == 0 ){
-    	    return "true";
-    	}else{
-    	    return "false";
-    	}
+        if ($user == 0) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
+    public function checkCoupanCode(Request $request)
+    {
+        // dd("hii hadik kanzariya");
+        $id = $request->id ?? 0;
+        $coupan = Coupan::query();
+        $coupan = $coupan->where([
+            ['id', '<>', $id],
+            'code' => $request->code,
+        ])->count();
+
+        if ($coupan == 0) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
 
     public function noScript()
@@ -107,31 +126,32 @@ class UtilityController extends Controller
         return redirect(route('admin.dashboard.index'));
     }
 
-        // For Admin Panel Usage
+    // For Admin Panel Usage
     public function checkTitle(Request $request)
     {
         $id = $request->id ?? 0;
-        if( $request->type == 'cms' ) {
+        if ($request->type == 'cms') {
             $data = CmsPage::query();
         }
 
         $data = $data->where([
-                ['id', '<>', $id],
-                'title' => $request->title,
-            ])->count();
+            ['id', '<>', $id],
+            'title' => $request->title,
+        ])->count();
 
 
-        if( $data == 0 ){
+        if ($data == 0) {
             return "true";
-        }else{
+        } else {
             return "false";
         }
     }
 
-    public function profileCheckPassword(Request $request) {
-        if(Hash::check($request->current_password, Auth::user()->password)){
+    public function profileCheckPassword(Request $request)
+    {
+        if (Hash::check($request->current_password, Auth::user()->password)) {
             return "true";
-        }else{
+        } else {
             return "false";
         }
     }

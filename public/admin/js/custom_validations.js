@@ -138,4 +138,13 @@ $.validator.addMethod(
         return "Image height must be equal to " + height + " px.";
     }
 );
+
+$.validator.addMethod(
+    "alpha_dots",
+    function (value, element) {
+        return this.optional(element) || /^\d+(\.\d+)*$/.test(value);
+    },
+    "Please enter only digits and numbers."
+);
+
 /* end jquery validation methods */
